@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy 16th Birthday 🎉 Tithii!! </title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b, #ff6a00);
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: all 0.5s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 { font-size: 2.5em; margin-bottom: 10px; }
+    p { font-size: 1.1em; }
+    button {
+      background: #fff;
+      color: #ff416c;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1em;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+    button:hover { transform: scale(1.1); background: #ffebf0; }
+
+    .surprise {
+      margin-top: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .surprise img {friend.jpg
+      width: 250px;
+      height: 250px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 4px solid #fff;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="card">
+    <h1>🎂 Happy 16th Birthday! 🎂</h1>
+    <p>Dear Bestie, wishing you endless joy, laughter, and success on your special day 💖</p>
+    <button id="openSurprise">Open Surprise 🎁</button>
+
+    <div class="surprise" id="surpriseContent">
+      <img src="friend.jpg" alt="Our Photo">
+      <h2>Happy Birthday Bestie! 🎉</h2>
+      <p>You are the most special person in my life 💖.<br>
+      Thanks for all the memories, laughter, and love.<br>
+      Cheers to more amazing adventures together 🥳🎂</p>
+    </div>
+  </div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" src="happy.mp3" loop></audio>
+
+  <script>
+    const btn = document.getElementById('openSurprise');
+    const surprise = document.getElementById('surpriseContent');
+    const bgMusic = document.getElementById('bgMusic');
+
+    btn.addEventListener('click', () => {
+      surprise.style.display = 'flex';
+      btn.style.display = 'none';
+      startConfetti();
+      bgMusic.play().catch(()=>{}); // play music
+    });
+
+    // Confetti animation
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let pieces = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function addConfetti() {
+      const colors = ["#fcd34d", "#f472b6", "#60a5fa", "#34d399", "#fb7185"];
+      for (let i = 0; i < 150; i++) {
+        pieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          w: 8,
+          h: 14,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: 2 + Math.random() * 4,
+          rotation: Math.random() * 360
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of pieces) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+    }
+
+    function update() {
+      for (let p of pieces) {
+        p.y += p.speed;
+        p.rotation += 5;
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      }
+    }
+
+    function loop() {
+      draw();
+      update();
+      requestAnimationFrame(loop);
+    }
+
+    function startConfetti() {
+      pieces = [];
+      addConfetti();
+      loop();
+    }
+  </script>
+</body>
+</html>
